@@ -5,43 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="96260f30-692c-462b-b539-025f516d89d9" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/AssignmentApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/AssignmentApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Config/DataInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Config/DataInitializer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Admin/AdminCarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Admin/AdminCarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Admin/AdminCustomerController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Admin/AdminCustomerController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Admin/AdminRentalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Admin/AdminRentalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Admin/AdminReportController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Admin/AdminReportController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Auth/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Auth/AuthController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Customer/CustomerCarController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Customer/CustomerCarController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Customer/CustomerProfileController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Customer/CustomerProfileController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Controller/Customer/CustomerRentalController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Controller/Customer/CustomerRentalController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/Account.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/Account.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/Car.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/Car.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/CarProducer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/CarProducer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/CarRental.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/CarRental.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/Customer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/Customer.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Entity/Review.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Entity/Review.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/AccountRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/AccountRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/CarProducerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/CarProducerRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/CarRentalRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/CarRentalRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/CarRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/CarRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/CustomerRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/CustomerRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Responsitory/ReviewRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Responsitory/ReviewRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/AccountService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/AccountService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/CarService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/CarService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/CustomerService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/CustomerService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/RentalService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/RentalService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/impl/AccountServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/impl/AccountServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/impl/CarServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/impl/CarServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/impl/CustomerServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/impl/CustomerServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/Service/impl/RentalServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/Service/impl/RentalServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/linh/edu/assignment/ServletInitializer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/vn/edu/fpt/linhnhhe194585/ServletInitializer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/resources/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application.properties" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/static/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/css/style.css" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/customer/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/customer/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/templates/fragments/layout.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/templates/fragments/layout.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test/java/linh/edu/assignment/AssignmentApplicationTests.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/test/java/vn/edu/fpt/linhnhhe194585/AssignmentApplicationTests.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.properties" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -172,5 +138,16 @@
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
