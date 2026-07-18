@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title th:text="${car.carName} + ' - Chi tiết xe'"></title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Back navigation link -->
+        <div style="margin-bottom: 1.5rem;">
+            <a th:href="@{/customer/dashboard}" style="display:inline-flex; align-items:center; gap:0.5rem; color:var(--text-muted); font-size:0.9rem; font-weight:500;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+                Quay lại danh mục xe
+            </a>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Left Side: Detail specifications -->
+            <div class="bento-card span-8">
+                <div class="car-card-image-placeholder" style="height: 360px;">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.145a3.375 3.375 0 0 0-3.31-3.17H16.5m-3.462 0h-3.462m3.462 0v5.25m0 0h3.522M10.5 7.5V12.75M9.462 3.75h1.125c.621 0 1.129.504 1.09 1.124l-.317 5.145a3.375 3.375 0 0 0-3.31 3.17H3.375a1.125 1.125 0 0 1-1.125-1.125V11.25M9.462 3.75h-5.25M9.462 3.75H12m-8.625 7.5h8.625"/></svg>
+                </div>
+                
+                <div style="margin-bottom: 2rem;">
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 0.5rem;">
+                        <h2 th:text="${car.carName}" style="font-size: 2.25rem;">Toyota Vios</h2>
+                        <span th:class="${'car-badge ' + (
+                            #strings.equalsIgnoreCase(car.status, 'Available') ? 'badge-available' : (
+                            #strings.equalsIgnoreCase(car.status, 'Rented') ? 'badge-rented' : 'badge-maintenance'
+                        ))}" th:text="${
+                            #strings.equalsIgnoreCase(car.status, 'Available') ? 'Sẵn sàng' : (
+                            #strings.equalsIgnoreCase(car.status, 'Rented') ? 'Đã thuê' : 'Bảo trì'
+                        )}" style="position:static;">Sẵn sàng</span>
+                    </div>
+                    <p th:text="${car.carProducer.producerName} + ' (Sản xuất tại ' + ${car.carProducer.country} + ')'" style="color:var(--text-muted); font-weight:500;">Hãng sản xuất</p>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Thông số kỹ thuật</h3>
+                    <div class="form-row cols-3">
+                        <div class="bento-card" style="padding: 1rem; text-align: center;">
+                            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Số chỗ</span>
+                            <p th:text="${car.capacity} + ' chỗ'" style="font-size: 1.25rem; font-family: var(--font-display); font-weight:700; margin-top: 0.25rem;">5 chỗ</p>
+                        </div>
+                        <div class="bento-card" style="padding: 1rem; text-align: center;">
+                            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Màu sắc</span>
+                            <p th:text="${car.color}" style="font-size: 1.25rem; font-family: var(--font-display); font-weight:700; margin-top: 0.25rem;">Đen</p>
+                        </div>
+                        <div class="bento-card" style="padding: 1rem; text-align: center;">
+                            <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Năm sản xuất</span>
+                            <p th:text="${car.carModelYear}" style="font-size: 1.25rem; font-family: var(--font-display); font-weight:700; margin-top: 0.25rem;">2022</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 2rem;">
+                    <h3 style="font-size: 1.25rem; margin-bottom: 0.75rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Mô tả sản phẩm</h3>
+                    <p th:text="${car.description}" style="color:var(--text-secondary); white-space:pre-line;">Mô tả đầy đủ...</p>
+                </div>
+
+                <!-- Reviews Section -->
+                <div>
+                    <h3 style="font-size: 1.25rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; display:flex; justify-content:space-between; align-items:center;">
+                        <span>Đánh giá từ khách hàng</span>
+                        <span th:text="${#lists.size(reviews)} + ' đánh giá'" style="font-size:0.875rem; color:var(--text-muted); font-weight:normal;">3 đánh giá</span>
+                    </h3>
+                    
+                    <div style="display:flex; flex-direction:column; gap:1rem;">
+                        <!-- Loop reviews -->
+                        <div th:each="review : ${reviews}" class="bento-card" style="padding: 1.25rem; background-color: rgba(255,255,255,0.01);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.5rem;">
+                                <span th:text="${review.carRental.customer.fullName}" style="font-weight:600; font-size:0.95rem;">Nguyễn Văn A</span>
+                                
+                                <!-- Star Icons -->
+                                <div style="color:#f59e0b; display:flex; gap:0.125rem;">
+                                    <th:block th:each="i : ${#numbers.sequence(1, 5)}">
+                                        <span th:text="${i <= review.reviewStar ? '★' : '☆'}">★</span>
+                                    </th:block>
+                                </div>
+                            </div>
+                            <p th:text="${review.comment}" style="color:var(--text-secondary); font-size:0.9rem;">Xe chạy êm, máy lạnh mát sâu.</p>
+                        </div>
+                        
+                        <div th:if="${#lists.isEmpty(reviews)}" style="text-align:center; padding: 2rem; color:var(--text-muted); font-size:0.9rem;">
+                            Chưa có lượt đánh giá nào cho xe này.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Side: Booking Form Card -->
+            <div class="bento-card span-4" style="align-self: flex-start; position: sticky; top: 96px;">
+                <h3 style="font-family: var(--font-display); font-size: 1.5rem; margin-bottom: 1rem;">Đặt xe này</h3>
+                
+                <div style="margin-bottom: 1.5rem; display:flex; justify-content:space-between; align-items:baseline;">
+                    <span style="color:var(--text-muted); font-size:0.9rem;">Đơn giá:</span>
+                    <div>
+                        <span th:text="${#numbers.formatDecimal(car.rentPrice, 0, 'COMMA', 0, 'POINT')}" style="font-size:1.75rem; font-weight:800; color:var(--accent); font-family:var(--font-display);">500,000</span>
+                        <span style="color:var(--text-muted); font-size:0.9rem;"> đ/ngày</span>
+                    </div>
+                </div>
+
+                <form th:action="@{/customer/rent}" method="POST" th:if="${#strings.equalsIgnoreCase(car.status, 'Available')}">
+                    <input type="hidden" name="carIds" th:value="${car.id}">
+                    
+                    <div class="form-group">
+                        <label for="pickupDate" class="form-label">Ngày nhận xe</label>
+                        <input type="date" id="pickupDate" name="pickupDate" class="form-control" required>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom:1.5rem;">
+                        <label for="returnDate" class="form-label">Ngày trả xe</label>
+                        <input type="date" id="returnDate" name="returnDate" class="form-control" required>
+                    </div>
+
+                    <!-- Pricing estimate -->
+                    <div class="bento-card" style="background-color: var(--bg-tertiary); padding: 1rem; margin-bottom: 1.5rem;">
+                        <div style="display:flex; justify-content:space-between; align-items:center;">
+                            <span style="font-weight:600; font-size:0.9rem;">Tổng cộng tạm tính:</span>
+                            <span id="price-total" style="font-family: var(--font-display); font-weight:800; font-size:1.25rem; color:var(--accent);">0 đ</span>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; height: 48px; font-weight:600;">Xác nhận đặt thuê</button>
+                </form>
+
+                <div th:unless="${#strings.equalsIgnoreCase(car.status, 'Available')}" style="text-align:center; padding:1.5rem; background-color:rgba(255,255,255,0.02); border-radius:var(--radius-md);">
+                    <p style="color:var(--text-muted); font-weight:500; margin-bottom:1rem;">Xe hiện tại không thể đặt thuê.</p>
+                    <button class="btn btn-secondary" disabled style="width:100%; opacity:0.5; cursor:not-allowed;">Hết xe</button>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            /*<![CDATA[*/
+            const dailyRate = /*[[${car.rentPrice}]]*/ 0;
+            const pickupInput = document.getElementById('pickupDate');
+            const returnInput = document.getElementById('returnDate');
+            const priceTotal = document.getElementById('price-total');
+
+            if (pickupInput && returnInput) {
+                const todayStr = new Date().toISOString().split('T')[0];
+                pickupInput.min = todayStr;
+                returnInput.min = todayStr;
+
+                pickupInput.value = todayStr;
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                returnInput.value = tomorrow.toISOString().split('T')[0];
+
+                function calculateTotal() {
+                    const pickup = new Date(pickupInput.value);
+                    const returnD = new Date(returnInput.value);
+                    let days = 1;
+                    
+                    if (pickup && returnD && returnD >= pickup) {
+                        const diffTime = Math.abs(returnD - pickup);
+                        days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (days === 0) days = 1;
+                    }
+                    
+                    const finalTotal = dailyRate * days;
+                    priceTotal.innerText = `${finalTotal.toLocaleString()} đ (${days} ngày)`;
+                }
+
+                calculateTotal();
+
+                pickupInput.addEventListener('change', () => {
+                    returnInput.min = pickupInput.value;
+                    if (returnInput.value < pickupInput.value) {
+                        returnInput.value = pickupInput.value;
+                    }
+                    calculateTotal();
+                });
+                returnInput.addEventListener('change', calculateTotal);
+            }
+            /*]]>*/
+        </script>
+    </div>
+</body>
+</html>

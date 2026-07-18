@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Lịch sử thuê xe - FU Car Rental</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div style="margin-bottom: 2.5rem;">
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem; font-family: var(--font-display);">Lịch sử giao dịch của bạn</h1>
+            <p style="color: var(--text-muted);">Xem lại toàn bộ lịch sử thuê xe, theo dõi trạng thái các giao dịch đang diễn ra và gửi đánh giá phản hồi.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card span-12">
+                <div class="timeline" th:if="${!#lists.isEmpty(rentals)}">
+                    <!-- Loop through rental transactions -->
+                    <div th:each="rental : ${rentals}" class="timeline-item active">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; flex-wrap:wrap; gap:1rem; margin-bottom:0.75rem;">
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); font-weight:600; text-transform:uppercase;" th:text="'MÃ ĐƠN: #' + ${rental.id}">MÃ ĐƠN: #1001</span>
+                                <h3 th:text="${rental.car.carName}" style="font-size:1.35rem; margin-top:0.25rem;">Toyota Camry</h3>
+                            </div>
+                            
+                            <!-- Status Badges -->
+                            <div>
+                                <span th:class="${'car-badge ' + (
+                                    #strings.equalsIgnoreCase(rental.status, 'Active') ? 'badge-rented' : 'badge-available'
+                                )}" th:text="${
+                                    #strings.equalsIgnoreCase(rental.status, 'Active') ? 'Đang hoạt động' : 'Đã hoàn thành'
+                                }">Đang hoạt động</span>
+                            </div>
+                        </div>
+
+                        <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap:1rem; margin-bottom:1rem; background-color:rgba(255,255,255,0.01); padding:1rem; border-radius:var(--radius-md); border:1px solid var(--border);">
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Ngày nhận xe</span>
+                                <p th:text="${#temporals.format(rental.pickupDate, 'dd/MM/yyyy')}" style="font-weight:600; margin-top:0.125rem;">10/07/2026</p>
+                            </div>
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Ngày trả xe</span>
+                                <p th:text="${#temporals.format(rental.returnDate, 'dd/MM/yyyy')}" style="font-weight:600; margin-top:0.125rem;">12/07/2026</p>
+                            </div>
+                            <div>
+                                <span style="font-size:0.75rem; color:var(--text-muted); text-transform:uppercase;">Tổng chi phí</span>
+                                <p th:text="${#numbers.formatDecimal(rental.rentPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'" style="font-weight:800; color:var(--accent); font-family:var(--font-display); margin-top:0.125rem;">1,000,000 đ</p>
+                            </div>
+                        </div>
+
+                        <div style="display:flex; justify-content:flex-end;">
+                            <!-- Only allow review for completed rentals -->
+                            <th:block th:if="${#strings.equalsIgnoreCase(rental.status, 'Completed')}">
+                                <button type="button" class="btn btn-secondary review-btn" th:data-id="${rental.id}" th:data-car="${rental.car.carName}" style="display:inline-flex; align-items:center; gap:0.5rem;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                    Đánh giá chuyến đi
+                                </button>
+                            </th:block>
+                        </div>
+                    </div>
+                </div>
+
+                <div th:if="${#lists.isEmpty(rentals)}" style="text-align: center; padding: 4rem 2rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); margin-bottom: 1rem;"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/><path d="m9 16 2 2 4-4"/></svg>
+                    <p style="color: var(--text-muted); margin-bottom:1.5rem;">Bạn chưa thực hiện bất kỳ giao dịch thuê xe nào.</p>
+                    <a th:href="@{/customer/dashboard}" class="btn btn-primary">Thuê xe ngay</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Review Modal Dialog -->
+        <div id="review-modal" class="modal-overlay">
+            <div class="modal-content" style="max-width: 480px;">
+                <div class="modal-header">
+                    <h3 style="font-family: var(--font-display); font-size: 1.35rem;">Đánh giá chất lượng xe</h3>
+                    <span id="close-modal" class="modal-close-btn">&times;</span>
+                </div>
+                
+                <form th:action="@{/customer/review}" method="POST">
+                    <input type="hidden" name="rentalId" id="modal-rental-id">
+                    
+                    <div style="margin-bottom: 1.25rem;">
+                        <span style="font-size:0.875rem; color:var(--text-muted);">Bạn đang đánh giá cho xe:</span>
+                        <p id="modal-car-name" style="font-weight:600; font-size:1.1rem; margin-top:0.25rem;">Toyota Camry</p>
+                    </div>
+
+                    <!-- Stars rating input -->
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label class="form-label">Chọn số sao</label>
+                        <div class="rating-group">
+                            <input type="radio" id="star5" name="stars" value="5" class="rating-star-radio" required>
+                            <label for="star5" class="rating-star-label" title="5 sao">★</label>
+                            
+                            <input type="radio" id="star4" name="stars" value="4" class="rating-star-radio">
+                            <label for="star4" class="rating-star-label" title="4 sao">★</label>
+                            
+                            <input type="radio" id="star3" name="stars" value="3" class="rating-star-radio">
+                            <label for="star3" class="rating-star-label" title="3 sao">★</label>
+                            
+                            <input type="radio" id="star2" name="stars" value="2" class="rating-star-radio">
+                            <label for="star2" class="rating-star-label" title="2 sao">★</label>
+                            
+                            <input type="radio" id="star1" name="stars" value="1" class="rating-star-radio">
+                            <label for="star1" class="rating-star-label" title="1 sao">★</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="comment" class="form-label">Nội dung phản hồi</label>
+                        <textarea id="comment" name="comment" class="form-control" rows="4" placeholder="Chia sẻ trải nghiệm của bạn về chiếc xe..." required></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button type="button" id="cancel-review" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary" style="font-weight: 600;">Gửi đánh giá</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            const reviewModal = document.getElementById('review-modal');
+            const closeModal = document.getElementById('close-modal');
+            const cancelReview = document.getElementById('cancel-review');
+            const modalRentalId = document.getElementById('modal-rental-id');
+            const modalCarName = document.getElementById('modal-car-name');
+            const reviewButtons = document.querySelectorAll('.review-btn');
+
+            reviewButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modalRentalId.value = btn.getAttribute('data-id');
+                    modalCarName.innerText = btn.getAttribute('data-car');
+                    reviewModal.classList.add('active');
+                });
+            });
+
+            function closeModalAction() {
+                reviewModal.classList.remove('active');
+            }
+            closeModal.addEventListener('click', closeModalAction);
+            cancelReview.addEventListener('click', closeModalAction);
+            reviewModal.addEventListener('click', (e) => {
+                if (e.target === reviewModal) closeModalAction();
+            });
+        </script>
+    </div>
+</body>
+</html>

@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<head>
+    <title>Giao dịch thuê xe - Admin</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div style="margin-bottom:2.5rem;">
+            <h1 style="font-size:2rem; margin-bottom:0.25rem; font-family:var(--font-display);">Danh sách giao dịch cho
+                thuê</h1>
+            <p style="color:var(--text-muted);">Quản lý, duyệt và hoàn tất toàn bộ các đơn thuê xe trực tuyến trên hệ
+                thống.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card span-12">
+                <div class="table-container" style="margin: 0; border: none;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Phương tiện</th>
+                                <th>Ngày nhận xe</th>
+                                <th>Ngày trả xe</th>
+                                <th>Tổng doanh thu</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through rentals -->
+                            <tr th:each="rental : ${rentals}">
+                                <td th:text="'#' + ${rental.id}" style="font-weight:600; color:var(--text-muted);">#1001
+                                </td>
+                                <td>
+                                    <span th:text="${rental.customer.fullName}"
+                                        style="font-weight:600; display:block;">Nguyễn Văn A</span>
+                                    <span th:text="'SĐT: ' + ${rental.customer.mobile}"
+                                        style="font-size:0.75rem; color:var(--text-muted);">0987654321</span>
+                                </td>
+                                <td>
+                                    <span th:text="${rental.car.carName}" style="font-weight:600; display:block;">Toyota
+                                        Vios</span>
+                                    <span th:text="${rental.car.color} + ' | ' + ${rental.car.capacity} + ' chỗ'"
+                                        style="font-size:0.75rem; color:var(--text-muted);">Trắng | 5 chỗ</span>
+                                </td>
+                                <td th:text="${#temporals.format(rental.pickupDate, 'dd/MM/yyyy')}">10/07/2026</td>
+                                <td th:text="${#temporals.format(rental.returnDate, 'dd/MM/yyyy')}">12/07/2026</td>
+                                <td th:text="${#numbers.formatDecimal(rental.rentPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+                                    style="font-weight:700; color:var(--accent);">1,000,000 đ</td>
+                                <td>
+                                    <!-- Status Badges -->
+                                    <span th:class="${'car-badge ' + (
+                                        #strings.equalsIgnoreCase(rental.status, 'Active') ? 'badge-rented' : 'badge-available'
+                                    )}" th:text="${
+                                        #strings.equalsIgnoreCase(rental.status, 'Active') ? 'Đang thuê' : 'Đã hoàn thành'
+                                    }" style="position:static; display:inline-block;">Đang thuê</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; justify-content:flex-end;">
+                                        <!-- Complete button form -->
+                                        <th:block th:if="${#strings.equalsIgnoreCase(rental.status, 'Active')}">
+                                            <form th:action="@{/admin/rentals/complete/{id}(id=${rental.id})}"
+                                                method="POST" style="display:inline;">
+                                                <button type="submit" class="btn btn-primary"
+                                                    style="padding:0.4rem 0.8rem; font-size:0.8rem; font-weight:600;">Trả
+                                                    xe / Hoàn thành</button>
+                                            </form>
+                                        </th:block>
+                                        <span th:unless="${#strings.equalsIgnoreCase(rental.status, 'Active')}"
+                                            style="color:var(--text-muted); font-size:0.8rem; font-weight:500;">Không có
+                                            thao tác</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(rentals)}">
+                                <td colspan="8" style="text-align:center; padding:3rem; color:var(--text-muted);">Hệ
+                                    thống chưa phát sinh giao dịch cho thuê nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

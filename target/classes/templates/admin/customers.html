@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Quản lý khách hàng - Admin</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div style="margin-bottom:2.5rem;">
+            <h1 style="font-size:2rem; margin-bottom:0.25rem; font-family:var(--font-display);">Quản lý khách hàng</h1>
+            <p style="color:var(--text-muted);">Danh sách cơ sở dữ liệu khách hàng đăng ký thuê xe trên hệ thống.</p>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card span-12">
+                <div class="table-container" style="margin: 0; border: none;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mã KH</th>
+                                <th>Họ và Tên</th>
+                                <th>Tài khoản / Email</th>
+                                <th>Số điện thoại</th>
+                                <th>Ngày sinh</th>
+                                <th>CMND / CCCD</th>
+                                <th>Bằng lái xe</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through customers -->
+                            <tr th:each="cust : ${customers}">
+                                <td th:text="'#' + ${cust.id}" style="font-weight:600; color:var(--text-muted);">#1</td>
+                                <td th:text="${cust.fullName}" style="font-weight:600;">Nguyễn Văn A</td>
+                                <td>
+                                    <span th:text="${cust.account.name}" style="display:block; font-weight:500;">user123</span>
+                                    <span th:text="${cust.account.email}" style="font-size:0.75rem; color:var(--text-muted);">user@domain.com</span>
+                                </td>
+                                <td th:text="${cust.mobile}">0987654321</td>
+                                <td th:text="${#temporals.format(cust.birthday, 'dd/MM/yyyy')}">15/05/1995</td>
+                                <td th:text="${cust.identityCard}">012345678912</td>
+                                <td>
+                                    <span th:text="${cust.licenceNumber}" style="display:block; font-weight:600;">G1234567</span>
+                                    <span th:text="'Cấp ngày: ' + ${#temporals.format(cust.licenceDate, 'dd/MM/yyyy')}" style="font-size:0.75rem; color:var(--text-muted);">Cấp ngày: 10/06/2020</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; justify-content:flex-end;">
+                                        <!-- Delete customer form -->
+                                        <form th:action="@{/admin/customers/delete/{id}(id=${cust.id})}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khách hàng này? Thao tác này sẽ xóa vĩnh viễn tài khoản liên kết.');" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(customers)}">
+                                <td colspan="8" style="text-align:center; padding:3rem; color:var(--text-muted);">Hệ thống chưa có thông tin khách hàng nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

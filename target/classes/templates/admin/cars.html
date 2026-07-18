@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Quản lý xe hơi - Admin</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div style="display:flex; justify-content:between; align-items:center; margin-bottom:2.5rem; flex-wrap:wrap; gap:1rem;">
+            <div>
+                <h1 style="font-size:2rem; margin-bottom:0.25rem; font-family:var(--font-display);">Quản lý đội xe hơi</h1>
+                <p style="color:var(--text-muted);">Thêm, sửa đổi hoặc loại bỏ thông tin các phương tiện trong hệ thống cho thuê xe.</p>
+            </div>
+            <div>
+                <button type="button" id="add-car-btn" class="btn btn-primary" style="display:inline-flex; align-items:center; gap:0.5rem; font-weight:600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                    Thêm xe mới
+                </button>
+            </div>
+        </div>
+
+        <div class="bento-grid">
+            <div class="bento-card span-12">
+                <div class="table-container" style="margin: 0; border: none;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mã xe</th>
+                                <th>Tên xe</th>
+                                <th>Hãng sản xuất</th>
+                                <th>Đời xe</th>
+                                <th>Màu sắc</th>
+                                <th>Số chỗ</th>
+                                <th>Giá thuê</th>
+                                <th>Trạng thái</th>
+                                <th style="text-align:right;">Thao tác</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through cars -->
+                            <tr th:each="car : ${cars}">
+                                <td th:text="'#' + ${car.id}" style="font-weight:600; color:var(--text-muted);">#101</td>
+                                <td>
+                                    <span th:text="${car.carName}" style="font-weight:600; display:block;">Toyota Vios</span>
+                                    <span th:text="'Nhập ngày: ' + ${#temporals.format(car.importDate, 'dd/MM/yyyy')}" style="font-size:0.75rem; color:var(--text-muted);">Nhập ngày: 10/06/2026</span>
+                                </td>
+                                <td th:text="${car.carProducer.producerName}">Toyota</td>
+                                <td th:text="${car.carModelYear}">2022</td>
+                                <td th:text="${car.color}">Trắng</td>
+                                <td th:text="${car.capacity} + ' chỗ'">5 chỗ</td>
+                                <td th:text="${#numbers.formatDecimal(car.rentPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'" style="font-weight:700; color:var(--accent);">500,000 đ</td>
+                                <td>
+                                    <span th:class="${'car-badge ' + (
+                                        #strings.equalsIgnoreCase(car.status, 'Available') ? 'badge-available' : (
+                                        #strings.equalsIgnoreCase(car.status, 'Rented') ? 'badge-rented' : 'badge-maintenance'
+                                    ))}" th:text="${
+                                        #strings.equalsIgnoreCase(car.status, 'Available') ? 'Sẵn sàng' : (
+                                        #strings.equalsIgnoreCase(car.status, 'Rented') ? 'Đã thuê' : 'Bảo trì'
+                                    )}" style="position:static; display:inline-block;">Sẵn sàng</span>
+                                </td>
+                                <td>
+                                    <div style="display:flex; justify-content:flex-end; gap:0.5rem;">
+                                        <!-- Edit button with data attributes -->
+                                        <button type="button" class="btn btn-secondary edit-car-btn" style="padding:0.4rem 0.8rem; font-size:0.8rem;"
+                                                th:data-id="${car.id}"
+                                                th:data-name="${car.carName}"
+                                                th:data-year="${car.carModelYear}"
+                                                th:data-color="${car.color}"
+                                                th:data-capacity="${car.capacity}"
+                                                th:data-desc="${car.description}"
+                                                th:data-import="${car.importDate}"
+                                                th:data-producer="${car.carProducer.id}"
+                                                th:data-price="${car.rentPrice}"
+                                                th:data-status="${car.status}">Sửa</button>
+                                        
+                                        <!-- Delete Form -->
+                                        <form th:action="@{/admin/cars/delete/{id}(id=${car.id})}" method="POST" onsubmit="return confirm('Bạn chắc chắn muốn xóa xe này?');" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger" style="padding:0.4rem 0.8rem; font-size:0.8rem;">Xóa</button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(cars)}">
+                                <td colspan="9" style="text-align:center; padding:3rem; color:var(--text-muted);">Hệ thống chưa có thông tin xe hơi nào.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add/Edit Modal Dialog -->
+        <div id="car-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="font-family: var(--font-display); font-size: 1.5rem;" id="modal-title">Thêm xe mới</h3>
+                    <span id="close-modal" class="modal-close-btn">&times;</span>
+                </div>
+                
+                <form th:action="@{/admin/cars/save}" method="POST" id="car-form">
+                    <input type="hidden" name="id" id="car-id">
+                    
+                    <div class="form-row cols-2">
+                        <div class="form-group">
+                            <label for="carNameInput" class="form-label">Tên xe / Model</label>
+                            <input type="text" id="carNameInput" name="carName" class="form-control" placeholder="Toyota Vios 1.5G" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="producerIdInput" class="form-label">Hãng sản xuất</label>
+                            <select id="producerIdInput" name="producerId" class="form-control" required>
+                                <option value="">-- Chọn hãng --</option>
+                                <option th:each="p : ${producers}" th:value="${p.id}" th:text="${p.producerName}">Toyota</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row cols-3">
+                        <div class="form-group">
+                            <label for="carModelYearInput" class="form-label">Năm sản xuất</label>
+                            <input type="number" id="carModelYearInput" name="carModelYear" class="form-control" min="1990" max="2027" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="colorInput" class="form-label">Màu sắc</label>
+                            <input type="text" id="colorInput" name="color" class="form-control" placeholder="Đen, Trắng..." required>
+                        </div>
+                        <div class="form-group">
+                            <label for="capacityInput" class="form-label">Số chỗ ngồi</label>
+                            <select id="capacityInput" name="capacity" class="form-control" required>
+                                <option value="4">4 chỗ</option>
+                                <option value="5" selected>5 chỗ</option>
+                                <option value="7">7 chỗ</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-row cols-3">
+                        <div class="form-group">
+                            <label for="importDateInput" class="form-label">Ngày nhập kho</label>
+                            <input type="date" id="importDateInput" name="importDate" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="rentPriceInput" class="form-label">Giá thuê / ngày</label>
+                            <input type="number" id="rentPriceInput" name="rentPrice" class="form-control" placeholder="đ/ngày" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="statusInput" class="form-label">Trạng thái</label>
+                            <select id="statusInput" name="status" class="form-control" required>
+                                <option value="Available">Available (Sẵn sàng)</option>
+                                <option value="Rented">Rented (Đã thuê)</option>
+                                <option value="Maintenance">Maintenance (Bảo trì)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="margin-bottom: 1.5rem;">
+                        <label for="descriptionInput" class="form-label">Mô tả chi tiết</label>
+                        <textarea id="descriptionInput" name="description" class="form-control" rows="4" placeholder="Nhập mô tả xe..." required></textarea>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button type="button" id="cancel-btn" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary" style="font-weight: 600;">Lưu phương tiện</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            const carModal = document.getElementById('car-modal');
+            const addCarBtn = document.getElementById('add-car-btn');
+            const closeModal = document.getElementById('close-modal');
+            const cancelBtn = document.getElementById('cancel-btn');
+            const carForm = document.getElementById('car-form');
+            const modalTitle = document.getElementById('modal-title');
+            
+            const carIdInput = document.getElementById('car-id');
+            const carNameInput = document.getElementById('carNameInput');
+            const producerInput = document.getElementById('producerIdInput');
+            const yearInput = document.getElementById('carModelYearInput');
+            const colorInput = document.getElementById('colorInput');
+            const capacityInput = document.getElementById('capacityInput');
+            const importDateInput = document.getElementById('importDateInput');
+            const rentPriceInput = document.getElementById('rentPriceInput');
+            const statusInput = document.getElementById('statusInput');
+            const descInput = document.getElementById('descriptionInput');
+
+            const editButtons = document.querySelectorAll('.edit-car-btn');
+
+            addCarBtn.addEventListener('click', () => {
+                modalTitle.innerText = "Thêm xe mới";
+                carForm.reset();
+                carIdInput.value = '';
+                importDateInput.value = new Date().toISOString().split('T')[0];
+                statusInput.value = 'Available';
+                carModal.classList.add('active');
+            });
+
+            editButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    modalTitle.innerText = "Chỉnh sửa thông tin xe";
+                    
+                    carIdInput.value = btn.getAttribute('data-id');
+                    carNameInput.value = btn.getAttribute('data-name');
+                    producerInput.value = btn.getAttribute('data-producer');
+                    yearInput.value = btn.getAttribute('data-year');
+                    colorInput.value = btn.getAttribute('data-color');
+                    capacityInput.value = btn.getAttribute('data-capacity');
+                    importDateInput.value = btn.getAttribute('data-import');
+                    rentPriceInput.value = btn.getAttribute('data-price');
+                    statusInput.value = btn.getAttribute('data-status');
+                    descInput.value = btn.getAttribute('data-desc');
+
+                    carModal.classList.add('active');
+                });
+            });
+
+            function closeModalAction() {
+                carModal.classList.remove('active');
+            }
+            closeModal.addEventListener('click', closeModalAction);
+            cancelBtn.addEventListener('click', closeModalAction);
+            carModal.addEventListener('click', (e) => {
+                if (e.target === carModal) closeModalAction();
+            });
+        </script>
+    </div>
+</body>
+</html>

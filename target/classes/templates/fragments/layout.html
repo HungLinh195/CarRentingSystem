@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FU Car Renting System</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <th:block layout:fragment="head"></th:block>
+</head>
+<body class="light-theme">
+    <header class="main-header">
+        <div class="nav-container">
+            <!-- Left: Brand Logo -->
+            <div style="display: flex; justify-content: flex-start; align-items: center;">
+                <a href="/" class="brand-logo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:#10b981"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9C18.7 10.6 16 10 16 10s-1.3-1.4-2.2-2.3c-.5-.4-1.1-.7-1.8-.7H5c-.6 0-1.1.4-1.4.9l-1.4 2.9A3.7 3.7 0 0 0 2 12v4c0 .6.4 1 1 1h2"/><circle cx="7" cy="17" r="2"/><path d="M9 17h6"/><circle cx="17" cy="17" r="2"/></svg>
+                    FU Car Rental
+                </a>
+            </div>
+            
+            <!-- Center: Dynamic Navigation Links based on session user role -->
+            <div style="display: flex; justify-content: center; align-items: center;">
+                <ul class="nav-menu" th:if="${session.currentUser != null}">
+                    <!-- Admin Navigation -->
+                    <th:block th:if="${session.currentUser.role == 'Admin'}">
+                        <li><a th:href="@{/admin/cars}" class="nav-link">Xe hơi</a></li>
+                        <li><a th:href="@{/admin/customers}" class="nav-link">Khách hàng</a></li>
+                        <li><a th:href="@{/admin/rentals}" class="nav-link">Giao dịch</a></li>
+                        <li><a th:href="@{/admin/report}" class="nav-link">Báo cáo</a></li>
+                    </th:block>
+                    
+                    <!-- Customer Navigation -->
+                    <th:block th:if="${session.currentUser.role == 'Customer'}">
+                        <li><a th:href="@{/customer/dashboard}" class="nav-link">Thuê xe</a></li>
+                        <li><a th:href="@{/customer/history}" class="nav-link">Lịch sử thuê</a></li>
+                        <li><a th:href="@{/customer/profile}" class="nav-link">Hồ sơ</a></li>
+                    </th:block>
+                </ul>
+            </div>
+            
+            <!-- Right: Authentication status -->
+            <div class="nav-actions" style="justify-content: flex-end;">
+                <div th:if="${session.currentUser != null}" style="display:flex; align-items:center; gap:1rem;">
+                    <span th:text="${session.currentUser.name}" style="font-weight:500; font-size:0.875rem;">User</span>
+                    <a th:href="@{/logout}" class="btn btn-secondary" style="padding: 0.5rem 1rem; font-size:0.875rem;">Đăng xuất</a>
+                </div>
+                <div th:if="${session.currentUser == null}">
+                    <a th:href="@{/login}" class="btn btn-primary" style="padding: 0.5rem 1rem; font-size:0.875rem;">Đăng nhập</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <!-- Display alert messages -->
+        <div th:if="${success}" class="alert alert-success">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+            <span th:text="${success}">Success message</span>
+        </div>
+        <div th:if="${error}" class="alert alert-danger">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <span th:text="${error}">Error message</span>
+        </div>
+
+        <div layout:fragment="content"></div>
+    </main>
+
+    <script>
+        // Set active nav link highlighting
+        const currentUrl = window.location.pathname;
+        const navLinks = document.querySelectorAll('.nav-link');
+        navLinks.forEach(link => {
+            if (currentUrl.startsWith(link.getAttribute('href'))) {
+                link.classList.add('active');
+            }
+        });
+    </script>
+</body>
+</html>

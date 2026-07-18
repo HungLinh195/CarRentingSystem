@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{fragments/layout}">
+
+<head>
+    <title>Thống kê báo cáo - Admin</title>
+</head>
+
+<body>
+    <div layout:fragment="content">
+        <div style="margin-bottom:2.5rem;">
+            <h1 style="font-size:2rem; margin-bottom:0.25rem; font-family:var(--font-display);">Thống kê & Báo cáo doanh
+                thu</h1>
+            <p style="color:var(--text-muted);">Tạo báo cáo chi tiết giao dịch cho thuê xe theo khoảng thời gian và sắp
+                xếp theo doanh thu giảm dần.</p>
+        </div>
+
+        <!-- Filter date range -->
+        <div class="bento-card" style="margin-bottom: 2rem; padding: 1.25rem;">
+            <form th:action="@{/admin/report}" method="GET"
+                style="display: flex; flex-wrap: wrap; gap: 1.5rem; align-items: flex-end;">
+                <div class="form-group" style="flex: 1 1 200px; margin-bottom: 0;">
+                    <label for="startDate" class="form-label">Từ ngày</label>
+                    <input type="date" id="startDate" name="startDate" th:value="${startDate}" class="form-control"
+                        required>
+                </div>
+
+                <div class="form-group" style="flex: 1 1 200px; margin-bottom: 0;">
+                    <label for="endDate" class="form-label">Đến ngày</label>
+                    <input type="date" id="endDate" name="endDate" th:value="${endDate}" class="form-control" required>
+                </div>
+
+                <div>
+                    <button type="submit" class="btn btn-primary" style="font-weight: 600;">Tạo báo cáo thống
+                        kê</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Statistics Metrics Cards -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <span class="metric-label">Tổng lượt giao dịch</span>
+                <span class="metric-value" th:text="${#lists.size(rentals)}">0</span>
+            </div>
+
+            <div class="metric-card">
+                <span class="metric-label">Tổng doanh thu kỳ báo cáo</span>
+                <span class="metric-value"
+                    th:text="${#numbers.formatDecimal(totalRevenue, 0, 'COMMA', 0, 'POINT')} + ' đ'">0 đ</span>
+            </div>
+        </div>
+
+        <!-- Report Table Grid -->
+        <div class="bento-grid">
+            <div class="bento-card span-12">
+                <h3
+                    style="font-size:1.25rem; margin-bottom:1rem; border-bottom:1px solid var(--border); padding-bottom:0.5rem;">
+                    Danh sách giao dịch chi tiết</h3>
+                <div class="table-container" style="margin: 0; border: none;">
+                    <table class="custom-table">
+                        <thead>
+                            <tr>
+                                <th>Mã đơn</th>
+                                <th>Khách hàng</th>
+                                <th>Phương tiện</th>
+                                <th>Ngày nhận xe</th>
+                                <th>Ngày trả xe</th>
+                                <th>Số ngày thuê</th>
+                                <th style="text-align:right;">Doanh thu (Thuê xe)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Loop through reports -->
+                            <tr th:each="rental : ${rentals}">
+                                <td th:text="'#' + ${rental.id}" style="font-weight:600; color:var(--text-muted);">#1001
+                                </td>
+                                <td>
+                                    <span th:text="${rental.customer.fullName}"
+                                        style="font-weight:600; display:block;">Nguyễn Văn A</span>
+                                    <span th:text="${rental.customer.mobile}"
+                                        style="font-size:0.75rem; color:var(--text-muted);">0987654321</span>
+                                </td>
+                                <td>
+                                    <span th:text="${rental.car.carName}" style="font-weight:600; display:block;">Toyota
+                                        Vios</span>
+                                    <span th:text="${rental.car.carProducer.producerName}"
+                                        style="font-size:0.75rem; color:var(--text-muted);">Toyota</span>
+                                </td>
+                                <td th:text="${#temporals.format(rental.pickupDate, 'dd/MM/yyyy')}">10/07/2026</td>
+                                <td th:text="${#temporals.format(rental.returnDate, 'dd/MM/yyyy')}">12/07/2026</td>
+                                <td
+                                    th:text="${T(java.time.temporal.ChronoUnit).DAYS.between(rental.pickupDate, rental.returnDate) <= 0 ? 1 : T(java.time.temporal.ChronoUnit).DAYS.between(rental.pickupDate, rental.returnDate)} + ' ngày'">
+                                    2 ngày</td>
+                                <td th:text="${#numbers.formatDecimal(rental.rentPrice, 0, 'COMMA', 0, 'POINT')} + ' đ'"
+                                    style="font-weight:800; color:var(--accent); text-align:right;">1,000,000 đ</td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(rentals)}">
+                                <td colspan="7" style="text-align:center; padding:3rem; color:var(--text-muted);">Không
+                                    có giao dịch nào phát sinh trong khoảng thời gian được chọn.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Ensure end date is not before start date
+            const startInput = document.getElementById('startDate');
+            const endInput = document.getElementById('endDate');
+
+            startInput.addEventListener('change', () => {
+                endInput.min = startInput.value;
+            });
+        </script>
+    </div>
+</body>
+
+</html>

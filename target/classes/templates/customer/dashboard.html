@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Thuê xe - FU Car Rental</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <!-- Hero Section -->
+        <div style="margin-bottom: 3rem; text-align: center;">
+            <h1 style="font-size: 2.5rem; margin-bottom: 0.5rem; font-family: var(--font-display);">Thuê xe trực tuyến nhanh chóng</h1>
+            <p style="color: var(--text-muted); max-width: 600px; margin: 0 auto;">Lựa chọn và đặt chỗ ngay đội xe đời mới chất lượng cao của chúng tôi. Tìm kiếm chiếc xe phù hợp cho chuyến đi tiếp theo của bạn.</p>
+        </div>
+
+        <!-- Filter bar -->
+        <div class="bento-card" style="margin-bottom: 2rem; padding: 1.25rem;">
+            <form th:action="@{/customer/dashboard}" method="GET" style="display: flex; flex-wrap: wrap; gap: 1rem; align-items: flex-end;">
+                <div class="form-group" style="flex: 1 1 240px; margin-bottom: 0;">
+                    <label for="search-name" class="form-label">Tên xe</label>
+                    <input type="text" id="search-name" name="name" th:value="${name}" class="form-control" placeholder="Toyota, Honda...">
+                </div>
+                
+                <div class="form-group" style="flex: 1 1 160px; margin-bottom: 0;">
+                    <label for="search-color" class="form-label">Màu sắc</label>
+                    <select id="search-color" name="color" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="Đen" th:selected="${color == 'Đen'}">Đen</option>
+                        <option value="Trắng" th:selected="${color == 'Trắng'}">Trắng</option>
+                        <option value="Đỏ" th:selected="${color == 'Đỏ'}">Đỏ</option>
+                        <option value="Xanh" th:selected="${color == 'Xanh'}">Xanh</option>
+                        <option value="Xám" th:selected="${color == 'Xám'}">Xám</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" style="flex: 1 1 120px; margin-bottom: 0;">
+                    <label for="search-capacity" class="form-label">Số chỗ</label>
+                    <select id="search-capacity" name="capacity" class="form-control">
+                        <option value="">Tất cả</option>
+                        <option value="4" th:selected="${capacity == 4}">4 chỗ</option>
+                        <option value="5" th:selected="${capacity == 5}">5 chỗ</option>
+                        <option value="7" th:selected="${capacity == 7}">7 chỗ</option>
+                    </select>
+                </div>
+                
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <button type="submit" class="btn btn-primary">Tìm kiếm</button>
+                    <a th:href="@{/customer/dashboard}" class="btn btn-secondary">Đặt lại</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Catalog Grid -->
+        <div class="bento-grid">
+            <!-- Loop through cars -->
+            <div th:each="car : ${cars}" class="bento-card span-4" style="display: flex; flex-direction: column; justify-content: space-between; position: relative;">
+                
+
+
+                <div>
+                    <!-- Car Card Image -->
+                    <div class="car-card-image-placeholder">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124l-.317-5.145a3.375 3.375 0 0 0-3.31-3.17H16.5m-3.462 0h-3.462m3.462 0v5.25m0 0h3.522M10.5 7.5V12.75M9.462 3.75h1.125c.621 0 1.129.504 1.09 1.124l-.317 5.145a3.375 3.375 0 0 0-3.31 3.17H3.375a1.125 1.125 0 0 1-1.125-1.125V11.25M9.462 3.75h-5.25M9.462 3.75H12m-8.625 7.5h8.625"/></svg>
+                        
+                        <!-- Status Badge -->
+                        <span th:class="${'car-badge ' + (
+                            #strings.equalsIgnoreCase(car.status, 'Available') ? 'badge-available' : (
+                            #strings.equalsIgnoreCase(car.status, 'Rented') ? 'badge-rented' : 'badge-maintenance'
+                        ))}" th:text="${
+                            #strings.equalsIgnoreCase(car.status, 'Available') ? 'Sẵn sàng' : (
+                            #strings.equalsIgnoreCase(car.status, 'Rented') ? 'Đã thuê' : 'Bảo trì'
+                        )}">Sẵn sàng</span>
+                    </div>
+
+                    <div class="car-title-row">
+                        <div>
+                            <h3 th:text="${car.carName}" style="font-size: 1.25rem;">Toyota Vios</h3>
+                            <span th:text="${car.carProducer.producerName}" style="font-size: 0.825rem; color: var(--text-muted); font-weight: 500;">Toyota Japan</span>
+                        </div>
+                        <div class="car-price">
+                            <span th:text="${#numbers.formatDecimal(car.rentPrice, 0, 'COMMA', 0, 'POINT')}">500,000</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted); font-weight: normal;">đ/ngày</span>
+                        </div>
+                    </div>
+
+                    <p th:text="${car.description}" style="font-size: 0.875rem; color: var(--text-secondary); margin: 0.75rem 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; height: 2.8rem;">Mô tả ngắn của xe</p>
+
+                    <div class="car-specs-grid">
+                        <div class="car-specs-item">
+                            <!-- Capacity icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                            <span th:text="${car.capacity} + ' chỗ'">5 chỗ</span>
+                        </div>
+                        <div class="car-specs-item">
+                            <!-- Paint icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/><polyline points="3.27 6.96 12 12.01 20.73 6.96"/><line x1="12" y1="22.08" x2="12" y2="12"/></svg>
+                            <span th:text="${car.color}">Trắng</span>
+                        </div>
+                        <div class="car-specs-item">
+                            <!-- Calendar icon -->
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                            <span th:text="${car.carModelYear}">2022</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.25rem; display: flex; gap: 0.5rem;">
+                    <a th:href="@{/customer/cars/{id}(id=${car.id})}" class="btn btn-secondary" style="flex: 1; padding: 0.6rem;">Chi tiết</a>
+                    
+                    <button th:if="${#strings.equalsIgnoreCase(car.status, 'Available')}" type="button" class="btn btn-primary rent-single-btn" th:data-id="${car.id}" th:data-name="${car.carName}" th:data-price="${car.rentPrice}" style="flex: 1.5; padding: 0.6rem; font-weight:600;">Thuê ngay</button>
+                    <button th:unless="${#strings.equalsIgnoreCase(car.status, 'Available')}" type="button" class="btn btn-secondary" disabled style="flex: 1.5; padding: 0.6rem; opacity: 0.5; cursor: not-allowed;">Hết xe</button>
+                </div>
+            </div>
+            
+            <div th:if="${#lists.isEmpty(cars)}" class="bento-card span-12" style="text-align: center; padding: 4rem 2rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-muted); margin-bottom: 1rem;"><circle cx="12" cy="12" r="10"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+                <p style="color: var(--text-muted);">Không tìm thấy xe nào thỏa mãn điều kiện lọc.</p>
+            </div>
+        </div>
+
+
+
+        <!-- Booking Modal Dialog -->
+        <div id="booking-modal" class="modal-overlay">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 style="font-family: var(--font-display); font-size: 1.5rem;">Đăng ký thuê xe</h3>
+                    <span id="close-modal" class="modal-close-btn">&times;</span>
+                </div>
+                
+                <form th:action="@{/customer/rent}" method="POST" id="booking-form">
+                    <input type="hidden" name="carIds" id="modal-car-ids">
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <h4 style="font-size: 0.95rem; color: var(--text-muted); margin-bottom: 0.5rem; text-transform: uppercase;">Danh sách xe thuê:</h4>
+                        <div id="modal-car-names-list" style="display:flex; flex-direction:column; gap:0.5rem; max-height: 120px; overflow-y: auto;">
+                            <!-- Dynamically loaded list of cars -->
+                        </div>
+                    </div>
+
+                    <div class="form-row cols-2">
+                        <div class="form-group">
+                            <label for="pickupDate" class="form-label">Ngày nhận xe</label>
+                            <input type="date" id="pickupDate" name="pickupDate" class="form-control" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="returnDate" class="form-label">Ngày trả xe</label>
+                            <input type="date" id="returnDate" name="returnDate" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <!-- Pricing estimate -->
+                    <div class="bento-card" style="margin-top: 1.5rem; margin-bottom: 1.5rem; background-color: var(--bg-tertiary); padding: 1rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-muted); font-size: 0.9rem;">Tổng giá thuê / ngày:</span>
+                            <span id="price-per-day" style="font-family: var(--font-display); font-weight: 700; color: var(--text-primary);">0 đ</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--border); padding-top: 0.5rem;">
+                            <span style="font-weight: 600;">Tổng tạm tính (1 ngày):</span>
+                            <span id="price-total" style="font-family: var(--font-display); font-weight: 800; font-size: 1.4rem; color: var(--accent);">0 đ</span>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button type="button" id="cancel-booking" class="btn btn-secondary">Hủy</button>
+                        <button type="submit" class="btn btn-primary" style="font-weight: 600;">Xác nhận đặt thuê</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <script>
+            // Elements
+            const bookingModal = document.getElementById('booking-modal');
+            const closeModal = document.getElementById('close-modal');
+            const cancelBooking = document.getElementById('cancel-booking');
+            const bookingForm = document.getElementById('booking-form');
+            const modalCarIds = document.getElementById('modal-car-ids');
+            const modalCarNamesList = document.getElementById('modal-car-names-list');
+            const pricePerDay = document.getElementById('price-per-day');
+            const priceTotal = document.getElementById('price-total');
+            const pickupInput = document.getElementById('pickupDate');
+            const returnInput = document.getElementById('returnDate');
+            
+            const singleRentButtons = document.querySelectorAll('.rent-single-btn');
+
+            // Set default date bounds
+            const todayStr = new Date().toISOString().split('T')[0];
+            pickupInput.min = todayStr;
+            returnInput.min = todayStr;
+
+            function openBookingModal(carsList) {
+                // Populate modal
+                modalCarNamesList.innerHTML = '';
+                const ids = carsList.map(c => c.id).join(',');
+                modalCarIds.value = ids;
+
+                let totalDailyRate = 0;
+                carsList.forEach(c => {
+                    totalDailyRate += c.price;
+                    const row = document.createElement('div');
+                    row.className = 'interactive-list-row';
+                    row.style.padding = '0.5rem 0.75rem';
+                    row.style.marginBottom = '0';
+                    row.innerHTML = `
+                        <span style="font-weight: 500; font-size:0.9rem;">${c.name}</span>
+                        <span style="color:var(--accent); font-weight:600; font-size:0.875rem;">${c.price.toLocaleString()} đ/ngày</span>
+                    `;
+                    modalCarNamesList.appendChild(row);
+                });
+
+                pricePerDay.innerText = `${totalDailyRate.toLocaleString()} đ`;
+                
+                // Estimate pricing
+                function calculateTotal() {
+                    const pickup = new Date(pickupInput.value);
+                    const returnD = new Date(returnInput.value);
+                    let days = 1;
+                    
+                    if (pickup && returnD && returnD >= pickup) {
+                        const diffTime = Math.abs(returnD - pickup);
+                        days = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                        if (days === 0) days = 1;
+                    }
+                    
+                    const finalTotal = totalDailyRate * days;
+                    priceTotal.innerText = `${finalTotal.toLocaleString()} đ (${days} ngày)`;
+                }
+
+                pickupInput.value = todayStr;
+                // Default return date is tomorrow
+                const tomorrow = new Date();
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                returnInput.value = tomorrow.toISOString().split('T')[0];
+                calculateTotal();
+
+                pickupInput.addEventListener('change', () => {
+                    returnInput.min = pickupInput.value;
+                    if (returnInput.value < pickupInput.value) {
+                        returnInput.value = pickupInput.value;
+                    }
+                    calculateTotal();
+                });
+                returnInput.addEventListener('change', calculateTotal);
+
+                bookingModal.classList.add('active');
+            }
+
+            singleRentButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const car = {
+                        id: btn.getAttribute('data-id'),
+                        name: btn.getAttribute('data-name'),
+                        price: parseFloat(btn.getAttribute('data-price'))
+                    };
+                    openBookingModal([car]);
+                });
+            });
+
+            // Close actions
+            function closeModalAction() {
+                bookingModal.classList.remove('active');
+            }
+            closeModal.addEventListener('click', closeModalAction);
+            cancelBooking.addEventListener('click', closeModalAction);
+            bookingModal.addEventListener('click', (e) => {
+                if (e.target === bookingModal) closeModalAction();
+            });
+        </script>
+    </div>
+</body>
+</html>

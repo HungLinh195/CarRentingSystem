@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{fragments/layout}">
+<head>
+    <title>Hồ sơ cá nhân - FU Car Rental</title>
+</head>
+<body>
+    <div layout:fragment="content">
+        <div style="margin-bottom: 2.5rem;">
+            <h1 style="font-size: 2rem; margin-bottom: 0.5rem; font-family: var(--font-display);">Thông tin tài khoản</h1>
+            <p style="color: var(--text-muted);">Quản lý thông tin hồ sơ khách hàng, số bằng lái và thông tin liên hệ của bạn.</p>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Left Side: Profile Summary -->
+            <div class="bento-card span-4" style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem;">
+                <div style="width: 96px; height: 96px; border-radius: 50%; background-color: var(--accent-light); border: 2px solid var(--accent); display:flex; align-items:center; justify-content:center; color:var(--accent); margin-bottom: 0.5rem;">
+                    <!-- User avatar icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+                </div>
+                <div>
+                    <h3 th:text="${customer.fullName}" style="font-size: 1.35rem;">Nguyễn Văn A</h3>
+                    <span th:text="${currentUser.email}" style="font-size: 0.875rem; color: var(--text-muted); font-weight: 500;">email@domain.com</span>
+                </div>
+                <div style="display:inline-flex; align-items:center; gap:0.5rem; background-color:var(--bg-tertiary); padding: 0.375rem 1rem; border-radius:9999px; font-size:0.75rem; font-weight:600; text-transform:uppercase; border: 1px solid var(--border);">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--accent)"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                    Khách Hàng Thân Thiết
+                </div>
+            </div>
+
+            <!-- Right Side: Edit Form -->
+            <div class="bento-card span-8">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem;">Thông tin chi tiết</h3>
+                
+                <form th:action="@{/customer/profile}" method="POST">
+                    <div class="form-row cols-2">
+                        <div class="form-group">
+                            <label for="fullName" class="form-label">Họ và Tên</label>
+                            <input type="text" id="fullName" name="fullName" th:value="${customer.fullName}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="mobile" class="form-label">Số điện thoại</label>
+                            <input type="text" id="mobile" name="mobile" th:value="${customer.mobile}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row cols-2">
+                        <div class="form-group">
+                            <label for="birthday" class="form-label">Ngày sinh</label>
+                            <input type="date" id="birthday" name="birthday" th:value="${customer.birthday}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="identityCard" class="form-label">Số CMND / CCCD</label>
+                            <input type="text" id="identityCard" name="identityCard" th:value="${customer.identityCard}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div class="form-row cols-2" style="margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label for="licenceNumber" class="form-label">Số bằng lái xe</label>
+                            <input type="text" id="licenceNumber" name="licenceNumber" th:value="${customer.licenceNumber}" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="licenceDate" class="form-label">Ngày cấp bằng</label>
+                            <input type="date" id="licenceDate" name="licenceDate" th:value="${customer.licenceDate}" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="font-weight: 600; padding: 0.75rem 2rem;">Lưu thay đổi</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Change Password Form Card -->
+            <div class="bento-card span-12">
+                <h3 style="font-size: 1.25rem; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border); padding-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem;">
+                    Thay đổi mật khẩu
+                </h3>
+                
+                <form th:action="@{/customer/profile/change-password}" method="POST">
+                    <div class="form-group">
+                        <label for="currentPassword" class="form-label">Mật khẩu hiện tại</label>
+                        <input type="password" id="currentPassword" name="currentPassword" class="form-control" placeholder="••••••••" required>
+                    </div>
+                    
+                    <div class="form-row cols-2" style="margin-bottom: 1.5rem;">
+                        <div class="form-group">
+                            <label for="newPassword" class="form-label">Mật khẩu mới</label>
+                            <input type="password" id="newPassword" name="newPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmNewPassword" class="form-label">Xác nhận mật khẩu mới</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword" class="form-control" placeholder="••••••••" required>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <button type="submit" class="btn btn-primary" style="font-weight: 600; padding: 0.75rem 2rem;">Cập nhật mật khẩu</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
