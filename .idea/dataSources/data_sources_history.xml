@@ -1,5 +1,5 @@
 <DataSourcesHistory>
-  <DataSourceFromHistory isRemovedFromProject="false">
+  <DataSourceFromHistory isRemovedFromProject="true">
     <data-source source="LOCAL" name="@localhost" uuid="35ab59aa-ace3-433c-9162-4573f64a1882">
       <database-info product="Microsoft SQL Server" version="16.00.1000" jdbc-version="4.3" driver-name="Microsoft JDBC Driver 13.2 for SQL Server" driver-version="13.2.1.0" dbms="MSSQL" exact-version="16.0.1000" exact-driver-version="13.2">
         <extra-name-characters>$#@</extra-name-characters>
@@ -10,6 +10,29 @@
       <synchronize>true</synchronize>
       <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
       <jdbc-url>jdbc:sqlserver://localhost:1433</jdbc-url>
+      <secret-storage>master_key</secret-storage>
+      <user-name>sa</user-name>
+      <schema-mapping>
+        <introspection-scope>
+          <node kind="database" qname="@">
+            <node kind="schema" qname="@" />
+          </node>
+        </introspection-scope>
+      </schema-mapping>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
+  </DataSourceFromHistory>
+  <DataSourceFromHistory isRemovedFromProject="false">
+    <data-source source="LOCAL" name="FUCarRentingSystem_DB@localhost" uuid="6e35e05f-a371-4c9e-9832-337f0f1b7e35">
+      <database-info product="Microsoft SQL Server" version="16.00.1000" jdbc-version="4.3" driver-name="Microsoft JDBC Driver 13.2 for SQL Server" driver-version="13.2.1.0" dbms="MSSQL" exact-version="16.0.1000" exact-driver-version="13.2">
+        <extra-name-characters>$#@</extra-name-characters>
+        <identifier-quote-string>&quot;</identifier-quote-string>
+      </database-info>
+      <case-sensitivity plain-identifiers="mixed" quoted-identifiers="mixed" />
+      <driver-ref>sqlserver.ms</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.microsoft.sqlserver.jdbc.SQLServerDriver</jdbc-driver>
+      <jdbc-url>jdbc:sqlserver://localhost:1433;database=FUCarRentingSystem_DB</jdbc-url>
       <secret-storage>master_key</secret-storage>
       <user-name>sa</user-name>
       <schema-mapping>

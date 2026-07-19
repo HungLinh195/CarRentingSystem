@@ -22,7 +22,7 @@
             <div style="display: flex; justify-content: center; align-items: center;">
                 <ul class="nav-menu" th:if="${session.currentUser != null}">
                     <!-- Admin Navigation -->
-                    <th:block th:if="${session.currentUser.role == 'Admin'}">
+                    <th:block th:if="${session.currentUser.role.equalsIgnoreCase('Admin')}">
                         <li><a th:href="@{/admin/cars}" class="nav-link">Xe hơi</a></li>
                         <li><a th:href="@{/admin/customers}" class="nav-link">Khách hàng</a></li>
                         <li><a th:href="@{/admin/rentals}" class="nav-link">Giao dịch</a></li>
@@ -30,7 +30,7 @@
                     </th:block>
                     
                     <!-- Customer Navigation -->
-                    <th:block th:if="${session.currentUser.role == 'Customer'}">
+                    <th:block th:if="${session.currentUser.role.equalsIgnoreCase('Customer')}">
                         <li><a th:href="@{/customer/dashboard}" class="nav-link">Thuê xe</a></li>
                         <li><a th:href="@{/customer/history}" class="nav-link">Lịch sử thuê</a></li>
                         <li><a th:href="@{/customer/profile}" class="nav-link">Hồ sơ</a></li>
