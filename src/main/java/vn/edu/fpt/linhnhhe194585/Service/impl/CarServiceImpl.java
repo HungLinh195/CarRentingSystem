@@ -9,6 +9,8 @@ import vn.edu.fpt.linhnhhe194585.Service.CarService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,16 +36,48 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public List<Car> getCars(String name, String color, Integer capacity) {
+        if ((name != null && !name.isEmpty()) || (color != null && !color.isEmpty()) || capacity != null) {
+            return searchCars(name, color, capacity);
+        }
+        return getAllCars();
+    }
+
+    @Override
     public Optional<Car> getCarById(Integer id) {
         return carRepository.findById(id);
     }
 
     @Override
     public Car saveCar(Car car) {
+        if (car.getColor() == null || !car.getColor().matches("^[\\p{L}\\s]+$")) {
+            throw new IllegalArgumentException("Màu sắc chỉ được phép nhập chữ!");
+        }
         if (car.getStatus() == null) {
             car.setStatus("Available");
         }
         return carRepository.save(car);
+    }
+
+    @Override
+    public Car saveCar(Integer id, String carName, Integer carModelYear, String color, Integer capacity, String description, String importDateStr, Integer producerId, BigDecimal rentPrice, String status) {
+        CarProducer producer = getProducerById(producerId)
+                .orElseThrow(() -> new IllegalArgumentException("Nhà sản xuất không hợp lệ."));
+
+        Car car = Car.builder()
+                .id(id)
+                .carName(carName)
+                .carModelYear(carModelYear)
+                .color(color)
+                .capacity(capacity)
+                .description(description)
+                .importDate(LocalDate.parse(importDateStr))
+                .carProducer(producer)
+                .rentPrice(rentPrice)
+                .status(status)
+                .build();
+
+        return saveCar(car);
     }
 
     @Override

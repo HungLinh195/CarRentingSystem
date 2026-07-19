@@ -41,15 +41,7 @@ public class CustomerRentalController {
         if (user == null || !"Customer".equalsIgnoreCase(user.getRole())) return "redirect:/login";
 
         try {
-            List<Integer> carIds = Arrays.stream(carIdsStr.split(","))
-                    .map(String::trim)
-                    .map(Integer::parseInt)
-                    .collect(Collectors.toList());
-
-            LocalDate pickupDate = LocalDate.parse(pickupDateStr);
-            LocalDate returnDate = LocalDate.parse(returnDateStr);
-
-            rentalService.createRentals(user.getCustomer().getId(), carIds, pickupDate, returnDate);
+            rentalService.createRentals(user.getCustomer().getId(), carIdsStr, pickupDateStr, returnDateStr);
             redirectAttributes.addFlashAttribute("success", "Đặt xe thành công!");
             return "redirect:/customer/history";
         } catch (Exception e) {
@@ -64,7 +56,9 @@ public class CustomerRentalController {
 
         Account user = (Account) session.getAttribute("currentUser");
         List<CarRental> rentals = rentalService.getRentalsByCustomer(user.getCustomer().getId());
+        List<Integer> reviewedRentalIds = rentalService.getReviewedRentalIds(user.getCustomer().getId());
         model.addAttribute("rentals", rentals);
+        model.addAttribute("reviewedRentalIds", reviewedRentalIds);
         return "customer/history";
     }
 

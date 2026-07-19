@@ -19,8 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class RentalServiceImpl implements RentalService {
@@ -35,6 +37,16 @@ public class RentalServiceImpl implements RentalService {
 
     @Autowired
     private ReviewRepository reviewRepository;
+
+    @Override
+    public BigDecimal calculateTotalRevenue(List<CarRental> rentals) {
+        if (rentals == null) {
+            return BigDecimal.ZERO;
+        }
+        return rentals.stream()
+                .map(CarRental::getRentPrice)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 
     @Override
     public List<CarRental> getAllRentals() {
@@ -102,6 +114,23 @@ public class RentalServiceImpl implements RentalService {
 
     @Override
     @Transactional
+    public List<CarRental> createRentals(Integer customerId, String carIdsStr, String pickupDateStr, String returnDateStr) {
+        if (carIdsStr == null || carIdsStr.trim().isEmpty()) {
+            throw new IllegalArgumentException("Danh sách xe thuê không được để trống");
+        }
+        List<Integer> carIds = Arrays.stream(carIdsStr.split(","))
+                .map(String::trim)
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        LocalDate pickupDate = LocalDate.parse(pickupDateStr);
+        LocalDate returnDate = LocalDate.parse(returnDateStr);
+
+        return createRentals(customerId, carIds, pickupDate, returnDate);
+    }
+
+    @Override
+    @Transactional
     public CarRental updateRentalStatus(Integer rentalId, String status) {
         CarRental rental = carRentalRepository.findById(rentalId)
                 .orElseThrow(() -> new IllegalArgumentException("Rental record not found"));
@@ -131,6 +160,10 @@ public class RentalServiceImpl implements RentalService {
             throw new IllegalStateException("Can only review completed rentals");
         }
 
+        if (reviewRepository.findByCarRental(rental).isPresent()) {
+            throw new IllegalStateException("Đơn thuê xe này đã được đánh giá rồi.");
+        }
+
         Review review = Review.builder()
                 .carRental(rental)
                 .reviewStar(stars)
@@ -143,5 +176,10 @@ public class RentalServiceImpl implements RentalService {
     @Override
     public List<Review> getReviewsForCar(Integer carId) {
         return reviewRepository.findByCarId(carId);
+    }
+
+    @Override
+    public List<Integer> getReviewedRentalIds(Integer customerId) {
+        return reviewRepository.findReviewedRentalIdsByCustomerId(customerId);
     }
 }

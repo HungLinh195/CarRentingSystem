@@ -39,9 +39,7 @@ public class AdminReportController {
         LocalDate endDate = (endDateStr != null && !endDateStr.isEmpty()) ? LocalDate.parse(endDateStr) : LocalDate.now();
 
         List<CarRental> rentals = rentalService.getReport(startDate, endDate);
-        BigDecimal totalRevenue = rentals.stream()
-                .map(CarRental::getRentPrice)
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
+        BigDecimal totalRevenue = rentalService.calculateTotalRevenue(rentals);
 
         model.addAttribute("rentals", rentals);
         model.addAttribute("startDate", startDate);

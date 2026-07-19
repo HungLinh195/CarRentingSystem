@@ -56,23 +56,7 @@ public class AdminCarController {
         if (user == null || !"Admin".equalsIgnoreCase(user.getRole())) return "redirect:/login";
 
         try {
-            CarProducer producer = carService.getProducerById(producerId)
-                    .orElseThrow(() -> new IllegalArgumentException("Nhà sản xuất không hợp lệ."));
-
-            Car car = Car.builder()
-                    .id(id)
-                    .carName(carName)
-                    .carModelYear(carModelYear)
-                    .color(color)
-                    .capacity(capacity)
-                    .description(description)
-                    .importDate(LocalDate.parse(importDateStr))
-                    .carProducer(producer)
-                    .rentPrice(rentPrice)
-                    .status(status)
-                    .build();
-
-            carService.saveCar(car);
+            carService.saveCar(id, carName, carModelYear, color, capacity, description, importDateStr, producerId, rentPrice, status);
             redirectAttributes.addFlashAttribute("success", "Lưu thông tin xe thành công!");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lưu thất bại: " + e.getMessage());

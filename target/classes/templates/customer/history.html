@@ -49,10 +49,18 @@
                         <div style="display:flex; justify-content:flex-end;">
                             <!-- Only allow review for completed rentals -->
                             <th:block th:if="${#strings.equalsIgnoreCase(rental.status, 'Completed')}">
-                                <button type="button" class="btn btn-secondary review-btn" th:data-id="${rental.id}" th:data-car="${rental.car.carName}" style="display:inline-flex; align-items:center; gap:0.5rem;">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                                    Đánh giá chuyến đi
-                                </button>
+                                <th:block th:if="${#lists.contains(reviewedRentalIds, rental.id)}">
+                                    <span style="color: var(--text-muted); font-size: 0.9rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.25rem; background-color: rgba(255,255,255,0.02); padding: 0.5rem 1rem; border-radius: var(--radius-md); border: 1px solid var(--border);">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" style="color: #f59e0b; margin-right: 0.25rem;"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg>
+                                        Đã đánh giá
+                                    </span>
+                                </th:block>
+                                <th:block th:unless="${#lists.contains(reviewedRentalIds, rental.id)}">
+                                    <button type="button" class="btn btn-secondary review-btn" th:data-id="${rental.id}" th:data-car="${rental.car.carName}" style="display:inline-flex; align-items:center; gap:0.5rem;">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                                        Đánh giá chuyến đi
+                                    </button>
+                                </th:block>
                             </th:block>
                         </div>
                     </div>

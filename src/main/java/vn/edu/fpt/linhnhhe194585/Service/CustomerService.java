@@ -9,4 +9,5 @@ public interface CustomerService {
     Optional<Customer> getCustomerById(Integer id);
     Customer saveCustomer(Customer customer);
     void deleteCustomer(Integer id);
+    Customer updateProfile(Integer customerId, String fullName, String mobile, String birthdayStr, String identityCard, String licenceNumber, String licenceDateStr);
 }

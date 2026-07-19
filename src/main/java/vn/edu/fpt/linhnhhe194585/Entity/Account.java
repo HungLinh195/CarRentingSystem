@@ -21,10 +21,10 @@ public class Account {
     @Column(name = "AccountName", nullable = false, columnDefinition = "NVARCHAR(100)")
     private String name;
 
-    @Column(name = "Email", nullable = false, unique = true, length = 200, columnDefinition = "VARCHAR(200)")
+    @Column(name = "Email", nullable = false, unique = true, columnDefinition = "VARCHAR(200)")
     private String email;
 
-    @Column(name = "Password", nullable = false, length = 200, columnDefinition = "VARCHAR(200)")
+    @Column(name = "Password", nullable = false, columnDefinition = "VARCHAR(200)")
     private String password;
 
     @Column(name = "Role", nullable = false, columnDefinition = "NVARCHAR(10)")

@@ -22,16 +22,16 @@ public class Customer {
     @Column(name = "FullName", nullable = false, columnDefinition = "NVARCHAR(200)")
     private String fullName;
 
-    @Column(name = "Mobile", nullable = false, length = 15, columnDefinition = "VARCHAR(15)")
+    @Column(name = "Mobile", nullable = false,  columnDefinition = "VARCHAR(15)")
     private String mobile;
 
     @Column(name = "Birthday", nullable = false)
     private LocalDate birthday;
 
-    @Column(name = "IdentityCard", nullable = false, length = 20, columnDefinition = "VARCHAR(20)")
+    @Column(name = "IdentityCard", nullable = false, columnDefinition = "VARCHAR(20)")
     private String identityCard;
 
-    @Column(name = "LicenceNumber", nullable = false, length = 20, columnDefinition = "VARCHAR(20)")
+    @Column(name = "LicenceNumber", nullable = false, columnDefinition = "VARCHAR(20)")
     private String licenceNumber;
 
     @Column(name = "LicenceDate", nullable = false)

@@ -39,12 +39,7 @@ public class CustomerCarController {
                             Model model) {
         if (!checkAuth(session, model)) return "redirect:/login";
 
-        List<Car> cars;
-        if ((name != null && !name.isEmpty()) || (color != null && !color.isEmpty()) || capacity != null) {
-            cars = carService.searchCars(name, color, capacity);
-        } else {
-            cars = carService.getAllCars();
-        }
+        List<Car> cars = carService.getCars(name, color, capacity);
 
         model.addAttribute("cars", cars);
         model.addAttribute("name", name);

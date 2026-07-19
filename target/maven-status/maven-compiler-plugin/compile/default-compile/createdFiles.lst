@@ -10,6 +10,7 @@ vn\edu\fpt\linhnhhe194585\Entity\Car$CarBuilder.class
 vn\edu\fpt\linhnhhe194585\Service\CarService.class
 vn\edu\fpt\linhnhhe194585\Responsitory\ReviewRepository.class
 vn\edu\fpt\linhnhhe194585\Controller\Customer\CustomerCarController.class
+vn\edu\fpt\linhnhhe194585\Controller\Admin\AdminProfileController.class
 vn\edu\fpt\linhnhhe194585\Entity\Customer.class
 vn\edu\fpt\linhnhhe194585\Entity\CarRental.class
 vn\edu\fpt\linhnhhe194585\Service\impl\CarServiceImpl.class

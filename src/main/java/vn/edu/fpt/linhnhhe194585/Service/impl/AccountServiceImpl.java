@@ -29,10 +29,20 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public Account register(Account account, String fullName, String mobile, String birthday, String identityCard, String licenceNumber, String licenceDate) {
+        if (fullName == null || !fullName.matches("^[\\p{L}\\s]+$")) {
+            throw new IllegalArgumentException("Họ và tên chỉ được phép nhập chữ!");
+        }
+        if (mobile == null || !mobile.matches("^\\d{10}$")) {
+            throw new IllegalArgumentException("Số điện thoại phải bao gồm đúng 10 chữ số!");
+        }
+        if (identityCard == null || !identityCard.matches("^\\d+$")) {
+            throw new IllegalArgumentException("Số CMND/CCCD chỉ được phép nhập số!");
+        }
+
         if (accountRepository.findByEmail(account.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
-        account.setRole("Customer"); // Customer role by default
+        account.setRole("Customer");
         Account savedAccount = accountRepository.save(account);
 
         Customer customer = Customer.builder()
@@ -47,6 +57,17 @@ public class AccountServiceImpl implements AccountService {
         customerRepository.save(customer);
 
         return savedAccount;
+    }
+    
+    @Override
+    @Transactional
+    public Account register(String email, String password, String name, String fullName, String mobile, String birthday, String identityCard, String licenceNumber, String licenceDate) {
+        Account account = Account.builder()
+                .email(email)
+                .password(password)
+                .name(name)
+                .build();
+        return register(account, fullName, mobile, birthday, identityCard, licenceNumber, licenceDate);
     }
 
     @Override
@@ -69,5 +90,26 @@ public class AccountServiceImpl implements AccountService {
         }
         account.setPassword(newPassword);
         accountRepository.save(account);
+    }
+
+    @Override
+    @Transactional
+    public void changePassword(Integer accountId, String currentPassword, String newPassword, String confirmNewPassword) {
+        if (newPassword == null || !newPassword.equals(confirmNewPassword)) {
+            throw new IllegalArgumentException("Mật khẩu mới và xác nhận mật khẩu mới không khớp!");
+        }
+        changePassword(accountId, currentPassword, newPassword);
+    }
+
+    @Override
+    @Transactional
+    public Account updateProfile(Integer accountId, String name) {
+        if (name == null || !name.matches("^[\\p{L}\\s]+$")) {
+            throw new IllegalArgumentException("Họ và tên chỉ được phép nhập chữ!");
+        }
+        Account account = accountRepository.findById(accountId)
+                .orElseThrow(() -> new IllegalArgumentException("Không tìm thấy tài khoản."));
+        account.setName(name);
+        return accountRepository.save(account);
     }
 }

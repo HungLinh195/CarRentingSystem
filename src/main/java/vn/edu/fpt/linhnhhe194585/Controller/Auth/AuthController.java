@@ -69,12 +69,7 @@ public class AuthController {
                            @RequestParam("licenceDate") String licenceDate,
                            Model model) {
         try {
-            Account account = Account.builder()
-                    .email(email)
-                    .password(password)
-                    .name(name)
-                    .build();
-            accountService.register(account, fullName, mobile, birthday, identityCard, licenceNumber, licenceDate);
+            accountService.register(email, password, name, fullName, mobile, birthday, identityCard, licenceNumber, licenceDate);
             model.addAttribute("success", "Đăng ký tài khoản thành công! Vui lòng đăng nhập.");
             return "login";
         } catch (Exception e) {
